@@ -106,7 +106,7 @@
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
-<!--                            <executable>C:\Users\jakub\.jdks\openjdk-18.0.1\bin\java</executable>-->
+                            <executable>C:\Users\jakub\.jdks\openjdk-18.0.1\bin\java</executable>
                         </configuration>
                     </execution>
                     <execution>
