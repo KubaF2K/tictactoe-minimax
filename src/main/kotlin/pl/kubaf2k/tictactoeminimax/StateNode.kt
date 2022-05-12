@@ -2,7 +2,7 @@ package pl.kubaf2k.tictactoeminimax
 
 class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: StateNode? = null) {
     var children = ArrayList<StateNode>()
-    var payout = 0
+    var payout: Int? = null
 
     val won: Boolean get() {
             for (i in 0 until 3) {
@@ -99,15 +99,18 @@ class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: St
         }
         findPayout()
     }
+
     fun findPayout() {
-        payout = if (player) findMinPayout().payout else findMaxPayout().payout
+        payout = if (!player) findMinPayout().payout else findMaxPayout().payout
     }
     fun findMinPayout(): StateNode {
         var minChild = children[0]
         var minPayout = 2
         for (child in children) {
-            if (child.payout < minPayout) {
-                minPayout = child.payout
+            if (child.payout == null)
+                child.findPayout()
+            if (child.payout!! < minPayout) {
+                minPayout = child.payout!!
                 minChild = child
             }
         }
@@ -118,8 +121,10 @@ class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: St
         var maxChild = children[0]
         var maxPayout = -2
         for (child in children) {
-            if (child.payout > maxPayout) {
-                maxPayout = child.payout
+            if (child.payout == null)
+                child.findPayout()
+            if (child.payout!! > maxPayout) {
+                maxPayout = child.payout!!
                 maxChild = child
             }
         }
