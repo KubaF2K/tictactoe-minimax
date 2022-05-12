@@ -100,7 +100,7 @@ class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: St
         findPayout()
     }
     fun findPayout() {
-        payout = if (player) findMinPayout().payout else findMaxPayout().payout
+        payout = if (player) findMaxPayout().payout else findMinPayout().payout
     }
     fun findMinPayout(): StateNode {
         var minChild = children[0]
