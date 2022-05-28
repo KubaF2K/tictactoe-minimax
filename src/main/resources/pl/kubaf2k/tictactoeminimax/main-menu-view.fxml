@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pl.kubaf2k.tictactoeminimax.MainMenuController"
+      prefHeight="400.0" prefWidth="600.0" spacing="10" alignment="CENTER">
+    <Label>
+        <font><Font size="20"/></font>
+        Kółko i krzyżyk z algorytmem MiniMax
+    </Label>
+    <Button onAction="#launchTTT">Zwykły</Button>
+    <Button onAction="#launchMod">Zmodyfikowany</Button>
+    <Button onAction="#exit">Wyjście</Button>
+</VBox>

@@ -1,6 +1,6 @@
 package pl.kubaf2k.tictactoeminimax
 
-class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: StateNode? = null) {
+class StateNode(var player: Boolean, var state: Array<CharArray>) {
     var children = ArrayList<StateNode>()
     var payout = 0
 
@@ -46,8 +46,8 @@ class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: St
 
     val isFull: Boolean get() {
         for (row in state)
-            for (field in row)
-                if (field == ' ')
+            for (spot in row)
+                if (spot == ' ')
                     return false
         return true
     }
@@ -83,7 +83,7 @@ class StateNode(var player: Boolean, var state: Array<CharArray>, var parent: St
                     for (j2 in 0 until 3)
                         newState[i2][j2] = state[i2][j2]
                 newState[i][j] = if (player) 'O' else 'X'
-                val newStateNode = StateNode(!player, newState, this)
+                val newStateNode = StateNode(!player, newState)
                 addChild(newStateNode)
                 if (!newStateNode.won && !newStateNode.isFull)
                     newStateNode.generateStates()

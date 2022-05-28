@@ -10,7 +10,7 @@ import java.io.IOException;
 public class TicTacToeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("tictactoe-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("main-menu-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 400);
         stage.setTitle("Kółko i krzyżyk!");
         stage.setScene(scene);
