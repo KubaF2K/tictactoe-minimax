@@ -85,9 +85,14 @@ class ModdedController: Initializable {
                             return
                         }
                         enemyMove()
-                        if (currState.won)
+                        if (currState.won) {
                             lose()
                             return
+                        }
+                        if (moveNumber >= 7) {
+                            draw()
+                            return
+                        }
                     }
                     moving = false
                 }
@@ -99,8 +104,6 @@ class ModdedController: Initializable {
                     moving = true
                 }
             }
-            if (moveNumber >= 8)
-                draw()
         }
     }
 
