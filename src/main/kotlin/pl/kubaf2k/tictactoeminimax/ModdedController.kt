@@ -4,26 +4,27 @@ import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 import java.net.URL
 import java.util.*
 
 class ModdedController: Initializable {
-    val CIRCLE = 'O'
-    val CROSS = 'X'
-    var moveNumber = 0
-    var moving = false
-    var currMovingColumn = 0
-    var currMovingRow = 0
+    private var player2Char = 'O'
+    private var player1Char = 'X'
+    private var moveNumber = 0
+    private var moving = false
+    private var currMovingColumn = 0
+    private var currMovingRow = 0
 
 
     @FXML lateinit var mainGrid: GridPane
 
-    lateinit var root: ModStateNode
-    lateinit var currState: ModStateNode
+    private lateinit var root: ModStateNode
+    private lateinit var currState: ModStateNode
 
-    val buttons = Array(3) {Array(3) {Button()} }
+    private val buttons = Array(3) {Array(3) {Button()} }
 
     @FXML
     override fun initialize(url: URL?, resourceBundle: ResourceBundle?) {
@@ -35,9 +36,26 @@ class ModdedController: Initializable {
                 mainGrid.add(buttons[i][j], i, j)
             }
         }
-        root = ModStateNode(moveNumber, false, getState())
-        root.generateStates()
-        currState = root
+        val choiceAlert = Alert(Alert.AlertType.INFORMATION, "Czy chcesz grać jako pierwszy?",
+            ButtonType.YES, ButtonType.NO)
+        choiceAlert.title = "Wybór symbolu"
+        val alertResult = choiceAlert.showAndWait()
+        alertResult.ifPresent { button: ButtonType ->
+            if (button == ButtonType.YES) {
+                root = ModStateNode(moveNumber, false, getState())
+                root.generateStates()
+                currState = root
+            }
+            else if (button == ButtonType.NO) {
+                val temp = player1Char
+                player1Char = player2Char
+                player2Char = temp
+                root = ModStateNode(moveNumber, true, getState())
+                root.generateStates()
+                currState = root
+                enemyMove()
+            }
+        }
     }
 
     private fun getState(): Array<CharArray> {
@@ -46,8 +64,12 @@ class ModdedController: Initializable {
             for (j in state[i].indices) {
                 if (buttons[i][j].text.isEmpty())
                     state[i][j] = ' '
-                else
-                    state[i][j] = buttons[i][j].text[0]
+                else {
+                    if (buttons[i][j].text == player1Char.toString())
+                        state[i][j] = 'X'
+                    else
+                        state[i][j] = 'O'
+                }
             }
         }
         return state
@@ -80,7 +102,7 @@ class ModdedController: Initializable {
                             win()
                             return
                         }
-                        if (currState.isFull) {
+                        if (currState.isFull || moveNumber >= 7) {
                             draw()
                             return
                         }
@@ -89,7 +111,7 @@ class ModdedController: Initializable {
                             lose()
                             return
                         }
-                        if (moveNumber >= 7) {
+                        if (currState.isFull || moveNumber >= 7) {
                             draw()
                             return
                         }
@@ -98,7 +120,7 @@ class ModdedController: Initializable {
                 }
             }
             else {
-                if (buttons[x][y].text == CROSS.toString()) {
+                if (buttons[x][y].text == player1Char.toString()) {
                     currMovingColumn = x
                     currMovingRow = y
                     moving = true
@@ -109,7 +131,7 @@ class ModdedController: Initializable {
 
     private fun setField(x: Int, y: Int): Boolean {
         if (buttons[x][y].text == "") {
-            buttons[x][y].text = CROSS.toString()
+            buttons[x][y].text = player1Char.toString()
             moveNumber++
             return true
         }
@@ -127,9 +149,9 @@ class ModdedController: Initializable {
         for (i in buttons.indices)
             for (j in buttons[i].indices) {
                 buttons[i][j].text = if (currState.state[i][j] == 'X')
-                    CROSS.toString()
+                    player1Char.toString()
                 else if (currState.state[i][j] == 'O')
-                    CIRCLE.toString()
+                    player2Char.toString()
                 else ""
             }
     }

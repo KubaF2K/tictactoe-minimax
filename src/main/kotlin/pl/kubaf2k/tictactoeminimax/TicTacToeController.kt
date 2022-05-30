@@ -4,21 +4,22 @@ import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 import java.net.URL
 import java.util.*
 
 class TicTacToeController: Initializable {
-    val CIRCLE = 'O'
-    val CROSS = 'X'
+    private var player2Char = 'O'
+    private var player1Char = 'X'
 
     @FXML lateinit var mainGrid: GridPane
 
-    lateinit var root: StateNode
-    lateinit var currState: StateNode
+    private lateinit var root: StateNode
+    private lateinit var currState: StateNode
 
-    val buttons = Array(3) {Array(3) {Button()} }
+    private val buttons = Array(3) {Array(3) {Button()} }
 
     @FXML
     override fun initialize(url: URL?, resourceBundle: ResourceBundle?) {
@@ -30,9 +31,26 @@ class TicTacToeController: Initializable {
                 mainGrid.add(buttons[i][j], i, j)
             }
         }
-        root = StateNode(false, getState())
-        root.generateStates()
-        currState = root
+        val choiceAlert = Alert(Alert.AlertType.INFORMATION, "Czy chcesz grać jako pierwszy?",
+            ButtonType.YES, ButtonType.NO)
+        choiceAlert.title = "Wybór symbolu"
+        val alertResult = choiceAlert.showAndWait()
+        alertResult.ifPresent { button: ButtonType ->
+            if (button == ButtonType.YES) {
+                root = StateNode(false, getState())
+                root.generateStates()
+                currState = root
+            }
+            else if (button == ButtonType.NO) {
+                val temp = player1Char
+                player1Char = player2Char
+                player2Char = temp
+                root = StateNode(true, getState())
+                root.generateStates()
+                currState = root
+                enemyMove()
+            }
+        }
     }
 
     private fun getState(): Array<CharArray> {
@@ -41,8 +59,12 @@ class TicTacToeController: Initializable {
             for (j in state[i].indices) {
                 if (buttons[i][j].text.isEmpty())
                     state[i][j] = ' '
-                else
-                    state[i][j] = buttons[i][j].text[0]
+                else {
+                    if (buttons[i][j].text == player1Char.toString())
+                        state[i][j] = 'X'
+                    else
+                        state[i][j] = 'O'
+                }
             }
         }
         return state
@@ -60,17 +82,22 @@ class TicTacToeController: Initializable {
                 return
             }
             enemyMove()
+            if (currState.isFull) {
+                draw()
+                return
+            }
             if (currState.won)
                 lose()
+
         }
     }
 
     private fun setField(x: Int, y: Int, player: Boolean): Boolean {
         if (buttons[x][y].text == "") {
             if (player)
-                buttons[x][y].text = CROSS.toString()
+                buttons[x][y].text = player1Char.toString()
             else
-                buttons[x][y].text = CIRCLE.toString()
+                buttons[x][y].text = player2Char.toString()
             return true
         }
         return false
