@@ -102,7 +102,7 @@ class ModdedController: Initializable {
                             win()
                             return
                         }
-                        if (currState.isFull || moveNumber >= 7) {
+                        if (currState.isFull || moveNumber >= 8) {
                             draw()
                             return
                         }
@@ -111,7 +111,7 @@ class ModdedController: Initializable {
                             lose()
                             return
                         }
-                        if (currState.isFull || moveNumber >= 7) {
+                        if (currState.isFull || moveNumber >= 8) {
                             draw()
                             return
                         }
